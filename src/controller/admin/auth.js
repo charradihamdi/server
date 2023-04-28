@@ -2,7 +2,7 @@ const User = require("../../models/user");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
 const shortid = require("shortid");
-
+const ObjectID = require("mongoose").Types.ObjectId;
 exports.signup = (req, res) => {
   User.findOne({ email: req.body.email }).exec((error, user) => {
     if (user)
@@ -81,4 +81,30 @@ exports.signout = (req, res) => {
   res.status(200).json({
     message: "Signout successfully...!",
   });
+};
+module.exports.getusers = async (req, res) => {
+  const users = await User.find({ role: "user" }).select("-password");
+  res.status(200).json(users);
+};
+
+module.exports.userInfo = (req, res) => {
+  if (!ObjectID.isValid(req.params.id))
+    return res.status(400).send("ID unknown : " + req.params.id);
+
+  User.findById(req.params.id, (err, docs) => {
+    if (!err) res.send(docs);
+    else console.log("ID unknown : " + err);
+  }).select("-password");
+};
+
+module.exports.deleteUser = async (req, res) => {
+  if (!ObjectID.isValid(req.params.id))
+    return res.status(400).send("ID unknown : " + req.params.id);
+
+  try {
+    await User.deleteOne({ _id: req.params.id }).exec();
+    res.status(200).json({ message: "Successfully deleted. " });
+  } catch (err) {
+    return res.status(500).json({ message: err });
+  }
 };

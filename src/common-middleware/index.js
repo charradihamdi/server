@@ -24,20 +24,6 @@ const s3 = new aws.S3({
 
 exports.upload = multer({ storage });
 
-exports.uploadS3 = multer({
-  storage: multerS3({
-    s3: s3,
-    bucket: "flipkart-clone-app",
-    acl: "public-read",
-    metadata: function (req, file, cb) {
-      cb(null, { fieldName: file.fieldname });
-    },
-    key: function (req, file, cb) {
-      cb(null, shortid.generate() + "-" + file.originalname);
-    },
-  }),
-});
-
 exports.requireSignin = (req, res, next) => {
   if (req.headers.authorization) {
     const token = req.headers.authorization.split(" ")[1];

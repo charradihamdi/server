@@ -11,7 +11,7 @@ exports.createProduct = (req, res) => {
 
   if (req.files.length > 0) {
     productPictures = req.files.map((file) => {
-      return { img: file.location };
+      return { img: "/public/" + file.filename };
     });
   }
 
@@ -90,6 +90,7 @@ exports.getProductDetailsById = (req, res) => {
   if (productId) {
     Product.findOne({ _id: productId }).exec((error, product) => {
       if (error) return res.status(400).json({ error });
+      console.log(product);
       if (product) {
         res.status(200).json({ product });
       }
@@ -119,6 +120,5 @@ exports.getProducts = async (req, res) => {
     .select("_id name price quantity slug description productPictures category")
     .populate({ path: "category", select: "_id name" })
     .exec();
-
   res.status(200).json({ products });
 };

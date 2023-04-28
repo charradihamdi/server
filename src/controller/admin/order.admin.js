@@ -1,6 +1,17 @@
 const Order = require("../../models/order");
-
+const User = require("../../models/user");
+const { sendConfirmationEmail } = require("../../routes/nodeMailer");
 exports.updateOrder = (req, res) => {
+  console.log(req.body.user);
+  User.findById(req.body.user, (err, user) => {
+    console.log("user", user);
+    if (!err) {
+      if (req.body.type === "delivered") {
+        sendConfirmationEmail(user.email);
+      }
+    } else console.log("ID unknown : " + err);
+  }).select("-password");
+
   Order.updateOne(
     { _id: req.body.orderId, "orderStatus.type": req.body.type },
     {
