@@ -82,10 +82,8 @@ module.exports.updateUser = async (req, res) => {
       { _id: req.params.id },
       {
         $set: {
-          sexe: req.body.data.sexe,
           country: req.body.data.country,
           contactNumber: req.body.data.contactNumber,
-          statut: req.body.data.statut,
         },
       },
       { new: true, upsert: true, setDefaultsOnInsert: true },
