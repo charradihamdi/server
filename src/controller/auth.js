@@ -106,3 +106,21 @@ module.exports.userInfo = (req, res) => {
     else console.log("ID unknown : " + err);
   }).select("-password");
 };
+
+module.exports.uploadProfil = async (req, res) => {
+  console.log(req.file, req.params.userId);
+  if (req.file) {
+    image = "/public/" + req.file.filename;
+  }
+  try {
+    await User.findOneAndUpdate(
+      "6460c3b873c1b82c1c9b65b2",
+      { $set: { picture: image } },
+      { new: true, upsert: true, setDefaultsOnInsert: true }
+    )
+      .then((data) => res.send(data))
+      .catch((err) => res.status(500).send({ message: err }));
+  } catch (err) {
+    return res.status(500).send({ message: err });
+  }
+};

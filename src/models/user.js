@@ -43,7 +43,9 @@ const userSchema = new mongoose.Schema(
     },
     country: { type: String },
     contactNumber: { type: Number },
-    pofilePicture: { type: String },
+    picture: {
+      type: String,
+    },
     resetPasswordToken: { type: String },
     resetPasswordExpire: { type: Date },
   },
